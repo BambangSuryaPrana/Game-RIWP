@@ -113,8 +113,29 @@ export async function openDatabase({ url = process.env.DATABASE_URL, sqliteFile,
   const db = url
     ? await openPostgres(url)
     : await openSqlite(sqliteFile || process.env.SQLITE_FILE || path.resolve("data/riwp.db"));
+  await migrate(db);
   if (seed) await seedIfEmpty(db);
   return db;
+}
+
+// Pembaruan struktur untuk database yang dibuat versi lama aplikasi.
+async function migrate(db) {
+  // v1.1: kolom peran admin (superadmin / admin)
+  try {
+    await db.get("SELECT role FROM riwp_admins LIMIT 1");
+  } catch {
+    await db.run("ALTER TABLE riwp_admins ADD COLUMN role TEXT NOT NULL DEFAULT 'admin'");
+  }
+  await ensureSuperAdmin(db);
+}
+
+// Harus selalu ada minimal satu super admin. Kalau belum ada (misalnya database lama),
+// admin yang paling pertama dibuat dijadikan super admin.
+export async function ensureSuperAdmin(db) {
+  const s = await db.get("SELECT COUNT(*) AS n FROM riwp_admins WHERE role = 'superadmin'");
+  if (Number(s.n) > 0) return;
+  const first = await db.get("SELECT MIN(id) AS id FROM riwp_admins");
+  if (first?.id != null) await db.run("UPDATE riwp_admins SET role = 'superadmin' WHERE id = ?", [first.id]);
 }
 
 export const TABLES = ["riwp_admins", "riwp_sessions", "riwp_settings", "riwp_cases", "riwp_plays", "riwp_answers"];

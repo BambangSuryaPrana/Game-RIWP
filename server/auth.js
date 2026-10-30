@@ -55,18 +55,26 @@ export function requireAdmin(db) {
       const token = readCookie(req, COOKIE);
       if (!token) return res.status(401).json({ error: "Silakan masuk terlebih dahulu." });
       const row = await db.get(
-        `SELECT a.id, a.username, a.nama FROM riwp_sessions s JOIN riwp_admins a ON a.id = s.admin_id
+        `SELECT a.id, a.username, a.nama, a.role FROM riwp_sessions s JOIN riwp_admins a ON a.id = s.admin_id
          WHERE s.token_hash = ? AND s.expires_at > ?`,
         [sha256(token), new Date().toISOString()]
       );
       if (!row) return res.status(401).json({ error: "Sesi berakhir. Silakan masuk lagi." });
-      req.admin = { id: Number(row.id), username: row.username, nama: row.nama };
+      req.admin = { id: Number(row.id), username: row.username, nama: row.nama, role: row.role === "superadmin" ? "superadmin" : "admin" };
       next();
     } catch (e) {
       next(e);
     }
   };
 }
+
+// Hanya untuk super admin. Dipasang setelah requireAdmin.
+export function requireSuper(req, res, next) {
+  if (req.admin?.role !== "superadmin") return res.status(403).json({ error: "Hanya Super Admin yang bisa melakukan ini." });
+  next();
+}
+
+export const ROLES = ["superadmin", "admin"];
 
 // Pembatas percobaan sederhana di memori (per IP), untuk login dan pendaftaran pemain.
 export function rateLimiter({ windowMs, max, message }) {

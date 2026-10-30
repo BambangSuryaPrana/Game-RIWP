@@ -30,8 +30,24 @@ Arsitekturnya sama dengan aplikasi RPA sebelumnya: React + Vite untuk tampilan, 
 | **Peserta** | Tabel per pegawai (NIPP, nama, unit, jumlah main, nilai terbaik & terakhir, status, terakhir akses) atau semua permainan. Klik baris untuk melihat riwayat dan detail jawaban per soal. Bisa menghapus permainan uji coba. |
 | **Bank Soal** | Edit kasus, tambah kasus baru, tandai jawaban benar, nonaktifkan, urutkan naik/turun, hapus. |
 | **Pengaturan** | Judul, teks pembuka, dasar peraturan, kalimat pertanyaan, pesan salah, daftar pujian, batas lulus (bawaan 80), daftar unit kerja. |
-| **Akun** | Ganti password, tambah/hapus admin. |
+| **Akun** | Ganti password sendiri. Super Admin juga bisa menambah/menghapus admin, mengubah peran, dan mereset password admin lain. |
 | **Unduh Excel** | 4 sheet: Rekap Peserta, Semua Permainan, Detail Jawaban, Analisis Soal. Mengikuti filter yang sedang dipakai. |
+
+### Peran admin
+Ada dua peran. **Akun pertama yang dibuat otomatis menjadi Super Admin.**
+
+| Fitur | Admin | Super Admin |
+|---|:-:|:-:|
+| Melihat dashboard, data peserta, detail jawaban | ✓ | ✓ |
+| Mengunduh rekap Excel | ✓ | ✓ |
+| Mengedit, menambah, mengurutkan, menonaktifkan soal | ✓ | ✓ |
+| Mengganti password sendiri | ✓ | ✓ |
+| Menghapus soal | – | ✓ |
+| Menghapus data permainan pegawai | – | ✓ |
+| Menu **Pengaturan** (teks, batas lulus, unit kerja) | – | ✓ |
+| Menambah & menghapus admin, mengubah peran, reset password admin lain | – | ✓ |
+
+Aturan pengaman: harus selalu ada minimal satu Super Admin, dan Super Admin tidak bisa mengubah peran atau menghapus akunnya sendiri. Kalau aplikasi diperbarui dari versi lama yang belum punya peran, admin yang paling pertama dibuat otomatis menjadi Super Admin dan admin lainnya menjadi Admin.
 
 ---
 
@@ -50,7 +66,7 @@ npm run dev
 
 Port 3001 pada mode dev hanya server API (data), bukan tampilan.
 
-Saat pertama kali membuka halaman admin, isi username, nama, dan password untuk membuat akun admin pertama. Halaman ini hanya muncul selama belum ada admin.
+Saat pertama kali membuka halaman admin, isi username, nama, dan password untuk membuat akun **Super Admin** pertama. Halaman ini hanya muncul selama belum ada admin.
 
 Tanpa `DATABASE_URL`, data tersimpan di `data/riwp.db` (SQLite). 10 soal dari dokumen RIWP otomatis terisi.
 
@@ -187,7 +203,7 @@ test/                 uji otomatis
 | `riwp_answers` | Jawaban per soal: pilihan, kunci, benar/salah, waktu (judul kasus disalin, jadi riwayat aman walau soal diubah) |
 | `riwp_cases` | Bank soal |
 | `riwp_settings` | Pengaturan game |
-| `riwp_admins`, `riwp_sessions` | Akun admin (password hash scrypt) dan sesi login (token hash) |
+| `riwp_admins`, `riwp_sessions` | Akun admin beserta perannya (`superadmin`/`admin`, password hash scrypt) dan sesi login (token hash) |
 
 ---
 

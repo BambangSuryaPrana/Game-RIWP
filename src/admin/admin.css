@@ -54,6 +54,9 @@
 .adm-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
 .adm-logo i { width: 34px; height: 34px; border-radius: 10px; background: var(--orange); display: grid; place-items: center; font-style: normal; font-weight: 800; }
 .adm-user { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.role-chip { background: rgba(255,255,255,.16); border-radius: 999px; padding: 4px 10px; font-weight: 700; font-size: 12px; white-space: nowrap; }
+.role-chip.super { background: var(--orange); color: #fff; }
+.badge.super { background: var(--orange-soft); color: #b4530b; }
 .adm-user button { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); color: #fff; border-radius: 999px; padding: 6px 14px; font-weight: 600; }
 .adm-hero h1 { font-size: clamp(22px, 3vw, 28px); font-weight: 800; margin-top: 18px; }
 .adm-hero p { margin: 4px 0 0; opacity: .85; }
@@ -76,7 +79,7 @@
   .adm-tabs { display: none; }
   .adm-main { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
   .adm-bottom {
-    display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    display: grid; grid-auto-columns: 1fr; grid-auto-flow: column; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
     background: var(--surface); border-top: 1px solid var(--line);
     padding: 6px max(6px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px));
     box-shadow: 0 -6px 20px rgba(24,32,63,.08);

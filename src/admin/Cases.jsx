@@ -7,7 +7,7 @@ const blank = () => ({
   options: { A: "", B: "", C: "" }, answer: "A", basis: "", competency: "", aktif: true,
 });
 
-export default function Cases({ onAuthLost }) {
+export default function Cases({ onAuthLost, isSuper }) {
   const call = useAdminApi(onAuthLost);
   const toast = useToast();
   const [cases, setCases] = useState(null);
@@ -64,12 +64,12 @@ export default function Cases({ onAuthLost }) {
           );
         })}
       </section>
-      {edit && <CaseEditor initial={edit} call={call} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); load(); }} />}
+      {edit && <CaseEditor initial={edit} call={call} isSuper={isSuper} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); load(); }} />}
     </>
   );
 }
 
-function CaseEditor({ initial, call, onClose, onSaved }) {
+function CaseEditor({ initial, call, isSuper, onClose, onSaved }) {
   const toast = useToast();
   const [c, setC] = useState(() => JSON.parse(JSON.stringify(initial)));
   const [err, setErr] = useState("");
@@ -129,7 +129,7 @@ function CaseEditor({ initial, call, onClose, onSaved }) {
           </label>
         </section>
         <div className="row-actions" style={{ justifyContent: "space-between" }}>
-          {!isNew ? (
+          {!isNew && isSuper ? (
             <ConfirmButton label="Hapus kasus" question="Hapus kasus ini? Riwayat jawaban pegawai tetap tersimpan."
               onConfirm={async () => { await call("/admin/cases/" + c.id, { method: "DELETE" }); toast("Kasus dihapus."); onSaved(); }} />
           ) : <span />}

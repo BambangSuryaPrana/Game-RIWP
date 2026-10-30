@@ -9,6 +9,7 @@ export function schemaSql(kind) {
       username TEXT NOT NULL UNIQUE,
       nama TEXT NOT NULL,
       pass_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'admin',
       created_at TEXT NOT NULL
     )`,
     `CREATE TABLE IF NOT EXISTS riwp_sessions (

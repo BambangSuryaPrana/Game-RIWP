@@ -3,7 +3,7 @@ import express from "express";
 import crypto from "node:crypto";
 import {
   COOKIE, hashPassword, verifyPassword, passwordProblem, createSession, readCookie,
-  cookieOptions, requireAdmin, rateLimiter, sha256,
+  cookieOptions, requireAdmin, requireSuper, ROLES, rateLimiter, sha256,
 } from "../auth.js";
 import { getSettings, listCases, caseFromRow, cleanCaseInput } from "../content.js";
 import { loadPlays, playersFromPlays, buildSummary } from "../stats.js";
@@ -15,6 +15,7 @@ export function adminRoutes(db, { setupCode }) {
   const r = express.Router();
   const loginLimit = rateLimiter({ windowMs: 15 * 60e3, max: 10, message: "Terlalu banyak percobaan masuk. Tunggu 15 menit." });
   const auth = requireAdmin(db);
+  const superOnly = [auth, requireSuper]; // khusus Super Admin
 
   const adminCount = async () => Number((await db.get("SELECT COUNT(*) AS n FROM riwp_admins")).n);
   const passScore = async () => Number((await getSettings(db)).passScore ?? 80);
@@ -42,7 +43,7 @@ export function adminRoutes(db, { setupCode }) {
       const prob = passwordProblem(req.body?.password);
       if (prob) return res.status(400).json({ error: prob });
       const row = await db.run(
-        "INSERT INTO riwp_admins (username, nama, pass_hash, created_at) VALUES (?, ?, ?, ?) RETURNING id",
+        "INSERT INTO riwp_admins (username, nama, pass_hash, role, created_at) VALUES (?, ?, ?, 'superadmin', ?) RETURNING id",
         [username, nama, hashPassword(req.body.password), new Date().toISOString()]
       );
       const s = await createSession(db, Number(row.rows[0].id));
@@ -116,7 +117,7 @@ export function adminRoutes(db, { setupCode }) {
     } catch (e) { next(e); }
   });
 
-  r.delete("/plays/:id", auth, async (req, res, next) => {
+  r.delete("/plays/:id", superOnly, async (req, res, next) => {
     try {
       await db.tx(async (t) => {
         await t.run("DELETE FROM riwp_answers WHERE play_id = ?", [req.params.id]);
@@ -169,7 +170,7 @@ export function adminRoutes(db, { setupCode }) {
     } catch (e) { next(e); }
   });
 
-  r.delete("/cases/:id", auth, async (req, res, next) => {
+  r.delete("/cases/:id", superOnly, async (req, res, next) => {
     try {
       // Riwayat jawaban tetap tersimpan (judul kasus disalin saat menjawab).
       await db.run("DELETE FROM riwp_cases WHERE id = ?", [Number(req.params.id)]);
@@ -192,7 +193,7 @@ export function adminRoutes(db, { setupCode }) {
     try { res.json(await getSettings(db)); } catch (e) { next(e); }
   });
 
-  r.put("/settings", auth, async (req, res, next) => {
+  r.put("/settings", superOnly, async (req, res, next) => {
     try {
       const b = req.body || {};
       const list = (v, n, len) => (Array.isArray(v) ? v : []).map((x) => clip(x, len)).filter(Boolean).slice(0, n);
@@ -221,31 +222,70 @@ export function adminRoutes(db, { setupCode }) {
   });
 
   // ---------- akun admin ----------
+  // Semua admin bisa melihat daftar admin. Menambah, menghapus, mengubah peran,
+  // dan mereset password admin lain hanya bisa dilakukan Super Admin.
+  const superCount = async () => Number((await db.get("SELECT COUNT(*) AS n FROM riwp_admins WHERE role = 'superadmin'")).n);
+  const cleanRole = (v) => (ROLES.includes(v) ? v : null);
+
   r.get("/admins", auth, async (req, res, next) => {
     try {
-      const rows = await db.all("SELECT id, username, nama, created_at FROM riwp_admins ORDER BY id");
-      res.json(rows.map((x) => ({ id: Number(x.id), username: x.username, nama: x.nama, createdAt: x.created_at })));
+      const rows = await db.all("SELECT id, username, nama, role, created_at FROM riwp_admins ORDER BY id");
+      res.json(rows.map((x) => ({ id: Number(x.id), username: x.username, nama: x.nama, role: x.role, createdAt: x.created_at })));
     } catch (e) { next(e); }
   });
 
-  r.post("/admins", auth, async (req, res, next) => {
+  r.post("/admins", superOnly, async (req, res, next) => {
     try {
       const username = clip(req.body?.username, 40).toLowerCase();
       const nama = clip(req.body?.nama, 100);
+      const role = cleanRole(req.body?.role || "admin");
       if (!/^[a-z0-9._-]{3,40}$/.test(username)) return res.status(400).json({ error: "Username 3–40 karakter: huruf kecil, angka, titik, minus, atau garis bawah." });
       if (!nama) return res.status(400).json({ error: "Nama lengkap wajib diisi." });
+      if (!role) return res.status(400).json({ error: "Peran tidak dikenal." });
       const prob = passwordProblem(req.body?.password);
       if (prob) return res.status(400).json({ error: prob });
       if (await db.get("SELECT id FROM riwp_admins WHERE username = ?", [username])) return res.status(409).json({ error: "Username sudah dipakai." });
-      await db.run("INSERT INTO riwp_admins (username, nama, pass_hash, created_at) VALUES (?, ?, ?, ?)", [username, nama, hashPassword(req.body.password), new Date().toISOString()]);
+      await db.run("INSERT INTO riwp_admins (username, nama, pass_hash, role, created_at) VALUES (?, ?, ?, ?, ?)", [username, nama, hashPassword(req.body.password), role, new Date().toISOString()]);
       res.status(201).json({ ok: true });
     } catch (e) { next(e); }
   });
 
-  r.delete("/admins/:id", auth, async (req, res, next) => {
+  r.put("/admins/:id/role", superOnly, async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const role = cleanRole(req.body?.role);
+      if (!role) return res.status(400).json({ error: "Peran tidak dikenal." });
+      if (id === req.admin.id) return res.status(400).json({ error: "Tidak bisa mengubah peran akun sendiri." });
+      const target = await db.get("SELECT role FROM riwp_admins WHERE id = ?", [id]);
+      if (!target) return res.status(404).json({ error: "Admin tidak ditemukan." });
+      if (target.role === "superadmin" && role !== "superadmin" && (await superCount()) <= 1) {
+        return res.status(400).json({ error: "Harus ada minimal satu Super Admin." });
+      }
+      await db.run("UPDATE riwp_admins SET role = ? WHERE id = ?", [role, id]);
+      res.json({ ok: true });
+    } catch (e) { next(e); }
+  });
+
+  r.put("/admins/:id/password", superOnly, async (req, res, next) => {
+    try {
+      const id = Number(req.params.id);
+      const prob = passwordProblem(req.body?.password);
+      if (prob) return res.status(400).json({ error: prob });
+      const r2 = await db.run("UPDATE riwp_admins SET pass_hash = ? WHERE id = ?", [hashPassword(req.body.password), id]);
+      if (!r2.changes) return res.status(404).json({ error: "Admin tidak ditemukan." });
+      // Paksa admin tersebut login ulang dengan password baru.
+      if (id !== req.admin.id) await db.run("DELETE FROM riwp_sessions WHERE admin_id = ?", [id]);
+      res.json({ ok: true });
+    } catch (e) { next(e); }
+  });
+
+  r.delete("/admins/:id", superOnly, async (req, res, next) => {
     try {
       const id = Number(req.params.id);
       if (id === req.admin.id) return res.status(400).json({ error: "Tidak bisa menghapus akun yang sedang dipakai." });
+      const target = await db.get("SELECT role FROM riwp_admins WHERE id = ?", [id]);
+      if (!target) return res.status(404).json({ error: "Admin tidak ditemukan." });
+      if (target.role === "superadmin" && (await superCount()) <= 1) return res.status(400).json({ error: "Harus ada minimal satu Super Admin." });
       await db.run("DELETE FROM riwp_sessions WHERE admin_id = ?", [id]);
       await db.run("DELETE FROM riwp_admins WHERE id = ?", [id]);
       res.json({ ok: true });

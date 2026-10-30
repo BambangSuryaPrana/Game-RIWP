@@ -12,8 +12,8 @@ const TABS = [
   { id: "dashboard", label: "Dashboard", icon: "▦", title: "Dashboard", sub: "Ringkasan siapa saja yang sudah bermain dan bagaimana hasilnya." },
   { id: "peserta", label: "Peserta", icon: "👥", title: "Data Peserta", sub: "Rekap per NIPP, riwayat permainan, dan detail jawaban." },
   { id: "soal", label: "Bank Soal", icon: "📁", title: "Bank Soal", sub: "Ubah, tambah, nonaktifkan, atau urutkan case file." },
-  { id: "pengaturan", label: "Pengaturan", icon: "⚙", title: "Pengaturan Game", sub: "Teks pembuka, pesan umpan balik, batas lulus, dan daftar unit kerja." },
-  { id: "akun", label: "Akun", icon: "👤", title: "Akun Admin", sub: "Kelola akun admin dan password." },
+  { id: "pengaturan", label: "Pengaturan", icon: "⚙", title: "Pengaturan Game", sub: "Teks pembuka, pesan umpan balik, batas lulus, dan daftar unit kerja.", superOnly: true },
+  { id: "akun", label: "Akun", icon: "👤", title: "Akun Admin", sub: "Akun Anda, daftar admin, dan peran akses." },
 ];
 
 export default function AdminApp({ tab }) {
@@ -44,7 +44,9 @@ export default function AdminApp({ tab }) {
   else if (state.needsSetup) content = <Setup onDone={load} codeRequired={state.codeRequired} />;
   else if (state.login) content = <Login onDone={load} />;
   else {
-    const active = TABS.find((t) => t.id === tab) || TABS[0];
+    const isSuper = state.me.role === "superadmin";
+    const tabs = TABS.filter((t) => !t.superOnly || isSuper);
+    const active = tabs.find((t) => t.id === tab) || tabs[0];
     content = (
       <>
         <header className="adm-hero">
@@ -53,13 +55,14 @@ export default function AdminApp({ tab }) {
               <div className="adm-logo"><i>R</i> RIWP Case Files · Admin</div>
               <div className="adm-user">
                 <span>Halo, <b>{state.me.nama}</b></span>
+                <span className={"role-chip" + (isSuper ? " super" : "")}>{isSuper ? "★ Super Admin" : "Admin"}</span>
                 <button type="button" onClick={logout}>Keluar</button>
               </div>
             </div>
             <h1>{active.title}</h1>
             <p>{active.sub}</p>
             <nav className="adm-tabs" aria-label="Menu admin">
-              {TABS.map((t) => (
+              {tabs.map((t) => (
                 <a key={t.id} href={`#/admin/${t.id}`} aria-current={t.id === active.id ? "page" : undefined}><span aria-hidden="true">{t.icon}</span>{t.label}</a>
               ))}
             </nav>
@@ -67,20 +70,20 @@ export default function AdminApp({ tab }) {
         </header>
         <main className="adm-main">
           {active.id === "dashboard" && <Dashboard onAuthLost={onAuthLost} />}
-          {active.id === "peserta" && <Players onAuthLost={onAuthLost} />}
-          {active.id === "soal" && <Cases onAuthLost={onAuthLost} />}
+          {active.id === "peserta" && <Players onAuthLost={onAuthLost} isSuper={isSuper} />}
+          {active.id === "soal" && <Cases onAuthLost={onAuthLost} isSuper={isSuper} />}
           {active.id === "pengaturan" && <Settings onAuthLost={onAuthLost} />}
           {active.id === "akun" && <Account me={state.me} onAuthLost={onAuthLost} />}
         </main>
         <nav className="adm-bottom" aria-label="Menu admin">
-          {TABS.map((t) => (
+          {tabs.map((t) => (
             <a key={t.id} href={`#/admin/${t.id}`} aria-current={t.id === active.id ? "page" : undefined}><span aria-hidden="true">{t.icon}</span>{t.label}</a>
           ))}
         </nav>
       </>
     );
   }
-  return <ToastProvider><div className="adm">{content}</div></ToastProvider>;
+  return <div className="adm"><ToastProvider>{content}</ToastProvider></div>;
 }
 
 function Login({ onDone }) {
@@ -121,8 +124,8 @@ function Setup({ onDone, codeRequired }) {
     <div className="auth">
       <form className="auth-card" onSubmit={submit}>
         <div className="adm-logo" style={{ color: "var(--navy)" }}><i style={{ color: "#fff" }}>R</i> RIWP Case Files</div>
-        <h1>Buat akun admin pertama</h1>
-        <p className="small muted" style={{ margin: 0 }}>Akun ini dipakai untuk masuk ke dashboard. Admin lain bisa ditambahkan nanti di menu Akun.</p>
+        <h1>Buat akun Super Admin</h1>
+        <p className="small muted" style={{ margin: 0 }}>Akun pertama otomatis menjadi Super Admin: bisa mengatur semua hal, termasuk menambah admin lain dan menentukan perannya di menu Akun.</p>
         {err && <p className="err-box" role="alert">{err}</p>}
         {codeRequired && <Field label="Kode setup" id="sc"><input className="inp" id="sc" autoComplete="off" value={f.code} onChange={set("code")} /></Field>}
         <Field label="Username" id="su"><input className="inp" id="su" autoComplete="username" placeholder="contoh: admin.sdm" value={f.username} onChange={set("username")} /></Field>

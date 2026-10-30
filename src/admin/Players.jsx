@@ -3,7 +3,7 @@ import { fmtWib } from "../api.js";
 import { useAdminApi, useToast, Drawer, StatusBadge, ConfirmButton } from "./ui.jsx";
 import { FilterBar, qs } from "./Dashboard.jsx";
 
-export default function Players({ onAuthLost }) {
+export default function Players({ onAuthLost, isSuper }) {
   const call = useAdminApi(onAuthLost);
   const [filters, setFilters] = useState({});
   const [mode, setMode] = useState("pegawai");
@@ -86,12 +86,12 @@ export default function Players({ onAuthLost }) {
           )}
         </div>
       </section>
-      {open && <PlayerDrawer nipp={open} call={call} passScore={passScore} onClose={() => setOpen(null)} onChanged={() => setTick((x) => x + 1)} />}
+      {open && <PlayerDrawer nipp={open} call={call} passScore={passScore} isSuper={isSuper} onClose={() => setOpen(null)} onChanged={() => setTick((x) => x + 1)} />}
     </>
   );
 }
 
-function PlayerDrawer({ nipp, call, passScore, onClose, onChanged }) {
+function PlayerDrawer({ nipp, call, passScore, isSuper, onClose, onChanged }) {
   const toast = useToast();
   const [plays, setPlays] = useState(null);
   const [sel, setSel] = useState(null);
@@ -152,7 +152,7 @@ function PlayerDrawer({ nipp, call, passScore, onClose, onChanged }) {
               {a.correct ? <span className="badge good">✓ Benar</span> : <span className="badge bad">✕ Salah</span>}
             </div>
           ))}
-          <div style={{ marginTop: 14 }}>
+          {isSuper && <div style={{ marginTop: 14 }}>
             <ConfirmButton
               label="Hapus permainan ini"
               question="Hapus permainan ini beserta jawabannya? Pakai untuk data uji coba atau data dobel."
@@ -164,7 +164,7 @@ function PlayerDrawer({ nipp, call, passScore, onClose, onChanged }) {
                 if (!rest.length) onClose(); else { setPlays(rest); setSel(rest[0].id); }
               }}
             />
-          </div>
+          </div>}
         </section>
       )}
     </Drawer>
