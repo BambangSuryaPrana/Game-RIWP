@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { api } from "../api.js";
-import { ToastProvider, Field } from "./ui.jsx";
+import { ToastProvider, Field, PasswordInput } from "./ui.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Players from "./Players.jsx";
 import Cases from "./Cases.jsx";
@@ -102,7 +102,7 @@ function Login({ onDone }) {
         <h1>Masuk admin</h1>
         {err && <p className="err-box" role="alert">{err}</p>}
         <Field label="Username" id="lu"><input className="inp" id="lu" autoComplete="username" value={f.username} onChange={(e) => setF({ ...f, username: e.target.value })} /></Field>
-        <Field label="Password" id="lp"><input className="inp" id="lp" type="password" autoComplete="current-password" value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
+        <Field label="Password" id="lp"><PasswordInput id="lp" autoComplete="current-password" value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
         <button className="btn-p" type="submit" disabled={busy || !f.username || !f.password}>{busy ? "Memeriksa…" : "Masuk"}</button>
         <a className="small muted" href="#/">← Kembali ke game</a>
       </form>
@@ -130,7 +130,7 @@ function Setup({ onDone, codeRequired }) {
         {codeRequired && <Field label="Kode setup" id="sc"><input className="inp" id="sc" autoComplete="off" value={f.code} onChange={set("code")} /></Field>}
         <Field label="Username" id="su"><input className="inp" id="su" autoComplete="username" placeholder="contoh: admin.sdm" value={f.username} onChange={set("username")} /></Field>
         <Field label="Nama lengkap" id="sn"><input className="inp" id="sn" value={f.nama} onChange={set("nama")} /></Field>
-        <Field label="Password (min. 8 karakter, huruf & angka)" id="sp"><input className="inp" id="sp" type="password" autoComplete="new-password" value={f.password} onChange={set("password")} /></Field>
+        <Field label="Password (min. 8 karakter, huruf & angka)" id="sp"><PasswordInput id="sp" autoComplete="new-password" value={f.password} onChange={set("password")} /></Field>
         <button className="btn-p" type="submit" disabled={busy}>{busy ? "Membuat…" : "Buat akun & masuk"}</button>
       </form>
     </div>

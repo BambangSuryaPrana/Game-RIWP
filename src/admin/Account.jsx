@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fmtWib } from "../api.js";
-import { useAdminApi, useToast, Field, ConfirmButton } from "./ui.jsx";
+import { useAdminApi, useToast, Field, ConfirmButton, PasswordInput } from "./ui.jsx";
 
 const ROLE_LABEL = { superadmin: "Super Admin", admin: "Admin" };
 
@@ -60,8 +60,8 @@ export default function Account({ me, onAuthLost }) {
         <form onSubmit={changePw} className="form-grid">
           {msg.pw && <p className="err-box full" style={{ margin: 0 }}>{msg.pw}</p>}
           {msg.pwOk && <p className="ok-box full" style={{ margin: 0 }}>{msg.pwOk}</p>}
-          <Field label="Password lama" id="pw-c"><input className="inp" id="pw-c" type="password" autoComplete="current-password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} /></Field>
-          <Field label="Password baru (min. 8 karakter, huruf & angka)" id="pw-n"><input className="inp" id="pw-n" type="password" autoComplete="new-password" value={pw.password} onChange={(e) => setPw({ ...pw, password: e.target.value })} /></Field>
+          <Field label="Password lama" id="pw-c"><PasswordInput id="pw-c" autoComplete="current-password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} /></Field>
+          <Field label="Password baru (min. 8 karakter, huruf & angka)" id="pw-n"><PasswordInput id="pw-n" autoComplete="new-password" value={pw.password} onChange={(e) => setPw({ ...pw, password: e.target.value })} /></Field>
           <div className="full"><button className="btn-p" type="submit" disabled={!pw.current || !pw.password}>Ganti password</button></div>
         </form>
       </section>
@@ -114,7 +114,7 @@ export default function Account({ me, onAuthLost }) {
                         <td colSpan={5} style={{ background: "var(--surface-2)" }}>
                           <form className="row-actions" onSubmit={(e) => { e.preventDefault(); doReset(a); }}>
                             <label htmlFor={`rp-${a.id}`} className="small" style={{ fontWeight: 700 }}>Password baru untuk @{a.username}</label>
-                            <input className="inp" id={`rp-${a.id}`} type="text" autoComplete="off" style={{ flex: "1 1 200px", width: "auto" }}
+                            <PasswordInput id={`rp-${a.id}`} autoComplete="new-password" wrapStyle={{ flex: "1 1 220px", width: "auto" }}
                               placeholder="min. 8 karakter, huruf & angka" value={resetPw} onChange={(e) => setResetPw(e.target.value)} />
                             <button type="submit" className="btn-p" disabled={!resetPw}>Simpan</button>
                             <button type="button" className="btn-g" onClick={() => setResetFor(null)}>Batal</button>
@@ -136,7 +136,7 @@ export default function Account({ me, onAuthLost }) {
             <div className="form-grid">
               <Field label="Username" id="na-u"><input className="inp" id="na-u" autoComplete="off" value={nf.username} onChange={(e) => setNf({ ...nf, username: e.target.value })} /></Field>
               <Field label="Nama lengkap" id="na-n"><input className="inp" id="na-n" value={nf.nama} onChange={(e) => setNf({ ...nf, nama: e.target.value })} /></Field>
-              <Field label="Password awal" id="na-p"><input className="inp" id="na-p" type="password" autoComplete="new-password" value={nf.password} onChange={(e) => setNf({ ...nf, password: e.target.value })} /></Field>
+              <Field label="Password awal" id="na-p"><PasswordInput id="na-p" autoComplete="new-password" value={nf.password} onChange={(e) => setNf({ ...nf, password: e.target.value })} /></Field>
               <Field label="Peran" id="na-r">
                 <select className="inp" id="na-r" value={nf.role} onChange={(e) => setNf({ ...nf, role: e.target.value })}>
                   <option value="admin">Admin</option>
