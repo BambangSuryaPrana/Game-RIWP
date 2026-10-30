@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: riwp-case-files
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SSL
+        value: verify
+      - key: SETUP_KODE
+        generateValue: true
+      - key: SESSION_DAYS
+        value: "7"

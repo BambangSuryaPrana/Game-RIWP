@@ -1,0 +1,33 @@
+{
+  "name": "riwp-case-files",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Game studi kasus RIWP (Respectful and Inclusive Workplace Policy) untuk Insan KAI, dengan dashboard admin dan database peserta.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c blue,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "node --disable-warning=ExperimentalWarning --watch-path=server --watch-preserve-output server/index.js --dev",
+    "dev:web": "vite",
+    "build": "vite build",
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/*.test.js\"",
+    "backup": "node --disable-warning=ExperimentalWarning scripts/backup.js",
+    "restore": "node --disable-warning=ExperimentalWarning scripts/restore.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "xlsx": "0.18.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^6.0.7"
+  }
+}

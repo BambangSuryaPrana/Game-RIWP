@@ -1,0 +1,317 @@
+{
+ "settings": {
+  "title": "RIWP Case Files",
+  "subtitle": "Choose the Right Action",
+  "intro": "Games mengenai skenario pembelajaran yang disusun untuk menguji pemahaman Insan KAI melalui situasi kerja sehari-hari dan mendorong pengambilan keputusan yang sesuai dengan kebijakan RIWP.",
+  "regulation": "Peraturan Direksi PT Kereta Api Indonesia (Persero) Nomor: PER.DZ/KC.202/IX/1/KA-2026 tentang Kebijakan Berperilaku Saling Menghargai dan Inklusif di Tempat Kerja (Respectful and Inclusive Workplace Policy).",
+  "question": "Manakah tindakan yang tepat?",
+  "wrongText": "Coba Lagi Yuk!",
+  "praises": [
+   "Kamu Keren!",
+   "Kamu Hebat!",
+   "Kamu Top Abis!",
+   "Kamu Insan KAI Superb!"
+  ],
+  "passScore": 80,
+  "units": [
+   "Kantor Pusat",
+   "Daop 1 Jakarta",
+   "Daop 2 Bandung",
+   "Daop 3 Cirebon",
+   "Daop 4 Semarang",
+   "Daop 5 Purwokerto",
+   "Daop 6 Yogyakarta",
+   "Daop 7 Madiun",
+   "Daop 8 Surabaya",
+   "Daop 9 Jember",
+   "Divre I Sumatera Utara",
+   "Divre II Sumatera Barat",
+   "Divre III Palembang",
+   "Divre IV Tanjungkarang",
+   "Balai Yasa",
+   "Anak Perusahaan"
+  ]
+ },
+ "cases": [
+  {
+   "title": "The \"Just a Joke\" Comment",
+   "topic": "Larangan Pelecehan",
+   "person": "Dina, Frontliner",
+   "story": "Saat bekerja, Dina mendengar rekan kerjanya berulang kali melontarkan candaan mengenai fisik dan penampilannya di depan rekan lain. Rekannya menganggap hal tersebut hanya candaan biasa. Namun, Dina merasa dipermalukan dan tidak nyaman berada di lingkungan kerja tersebut.",
+   "desk": [
+    {
+     "label": "Issue",
+     "value": "Komentar yang merendahkan martabat"
+    },
+    {
+     "label": "Context",
+     "value": "Interaksi antarpekerja"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Larangan pelecehan verbal"
+    }
+   ],
+   "options": {
+    "A": "Candaan diperbolehkan selama tidak ada niat menyakiti.",
+    "B": "Komentar yang merendahkan atau mempermalukan orang lain tidak dapat dibenarkan hanya karena dianggap sebagai candaan.",
+    "C": "Perilaku tersebut cukup diabaikan kecuali terjadi di depan atasan."
+   },
+   "answer": "B",
+   "basis": "Larangan Pelecehan. Kebijakan melarang komentar, candaan, atau ejekan yang merendahkan martabat seseorang.",
+   "competency": "Mencegah pelecehan verbal"
+  },
+  {
+   "title": "The Promotion Decision",
+   "topic": "Larangan Diskriminasi",
+   "person": "Rizal, Unit SDM",
+   "story": "Seorang pekerja memiliki kinerja baik dan memenuhi persyaratan promosi. Namun, atasannya menolak mengusulkan pekerja tersebut karena mempertimbangkan latar belakang pribadi yang tidak relevan dengan kompetensi maupun kebutuhan jabatan.",
+   "desk": [
+    {
+     "label": "Issue",
+     "value": "Keputusan karier yang tidak adil"
+    },
+    {
+     "label": "Context",
+     "value": "Promosi dan pengembangan karier"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Kesetaraan kesempatan"
+    }
+   ],
+   "options": {
+    "A": "Atasan bebas mempertimbangkan latar belakang pribadi dalam menentukan promosi.",
+    "B": "Keputusan promosi harus didasarkan pada kompetensi dan kriteria objektif, tanpa diskriminasi.",
+    "C": "Keputusan dapat dibenarkan selama ditetapkan oleh atasan langsung."
+   },
+   "answer": "B",
+   "basis": "Larangan Diskriminasi. Kebijakan melarang diskriminasi dalam penilaian kinerja, pengembangan kompetensi, dan promosi jabatan.",
+   "competency": "Mencegah diskriminasi"
+  },
+  {
+   "title": "The Unwanted Message",
+   "topic": "Pelecehan melalui Media Digital",
+   "person": "Andi, Pekerja Operasional",
+   "story": "Andi menerima pesan dari rekan kerjanya yang berisi gambar tidak pantas dan komentar bernuansa seksual melalui aplikasi komunikasi. Pengirim menganggap pesan tersebut sebagai bentuk keakraban karena mereka bekerja dalam tim yang sama.",
+   "desk": [
+    {
+     "label": "Tool",
+     "value": "Aplikasi komunikasi digital"
+    },
+    {
+     "label": "Issue",
+     "value": "Konten tidak pantas"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Pelecehan melalui media elektronik"
+    }
+   ],
+   "options": {
+    "A": "Pesan digital bersifat pribadi sehingga tidak termasuk dalam kebijakan tempat kerja.",
+    "B": "Konten seksual atau tidak pantas yang tidak dikehendaki dapat merupakan pelecehan dan tidak boleh dikirimkan.",
+    "C": "Perilaku tersebut dapat diterima selama pengirim dan penerima merupakan rekan kerja."
+   },
+   "answer": "B",
+   "basis": "Larangan Pelecehan. Kebijakan melarang pengiriman pesan, gambar, video, atau konten tidak pantas melalui media komunikasi digital.",
+   "competency": "Mencegah pelecehan digital"
+  },
+  {
+   "title": "The Silent Witness",
+   "topic": "Kewajiban Melaporkan Pelanggaran",
+   "person": "Sinta, Pekerja Administrasi",
+   "story": "Sinta menyaksikan seorang rekan kerja mendapatkan perlakuan yang merendahkan dari pekerja lain. Ia mengetahui bahwa perilaku tersebut tidak sesuai dengan RIWP, tetapi ragu melapor karena merasa bukan pihak yang mengalami langsung.",
+   "desk": [
+    {
+     "label": "Issue",
+     "value": "Dugaan pelanggaran RIWP"
+    },
+    {
+     "label": "Context",
+     "value": "Saksi kejadian"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Tanggung jawab Insan KAI"
+    }
+   ],
+   "options": {
+    "A": "Hanya orang yang mengalami langsung yang bertanggung jawab melaporkan kejadian.",
+    "B": "Kejadian dapat diabaikan sampai korban menyampaikan pengaduan resmi.",
+    "C": "Setiap Insan KAI yang mengalami, melihat, mendengar, atau mengetahui dugaan pelanggaran RIWP wajib melaporkannya melalui saluran yang tersedia."
+   },
+   "answer": "C",
+   "basis": "Pelaporan. Pelaporan merupakan tanggung jawab Insan KAI yang mengetahui adanya dugaan pelanggaran, tidak terbatas pada korban.",
+   "competency": "Memahami kewajiban pelaporan"
+  },
+  {
+   "title": "The Confidential Report",
+   "topic": "Kerahasiaan dan Perlindungan Pelapor",
+   "person": "Budi, Pekerja di Daerah Operasi",
+   "story": "Budi melaporkan dugaan pelecehan melalui saluran resmi perusahaan. Seorang rekan kerjanya meminta salinan laporan dan identitas pihak yang terlibat dengan alasan ingin mengetahui perkembangan kasus.",
+   "desk": [
+    {
+     "label": "Channel",
+     "value": "Saluran pelaporan resmi"
+    },
+    {
+     "label": "Issue",
+     "value": "Kerahasiaan informasi"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Perlindungan pelapor, korban, dan saksi"
+    }
+   ],
+   "options": {
+    "A": "Laporan dan identitas dapat dibagikan kepada rekan kerja demi transparansi.",
+    "B": "Kerahasiaan harus dijaga selama proses penanganan dan informasi wajib dilindungi sesuai ketentuan yang berlaku.",
+    "C": "Pelapor sebaiknya menarik laporan untuk menghindari konflik di tempat kerja."
+   },
+   "answer": "B",
+   "basis": "Pelaporan serta Perlindungan. Perusahaan wajib menjaga kerahasiaan identitas dan informasi terkait dugaan pelanggaran serta memberikan perlindungan sesuai ketentuan.",
+   "competency": "Menjaga kerahasiaan dan perlindungan"
+  },
+  {
+   "title": "The Manager's Responsibility",
+   "topic": "Keteladanan Pimpinan",
+   "person": "Rina, Kepala Unit",
+   "story": "Rina mengetahui adanya kebiasaan komunikasi yang merendahkan pekerja junior di unitnya. Meskipun belum ada pengaduan resmi, ia memilih tidak bertindak karena menganggap hal tersebut merupakan persoalan pribadi antarpekerja.",
+   "desk": [
+    {
+     "label": "Role",
+     "value": "Pimpinan unit organisasi"
+    },
+    {
+     "label": "Issue",
+     "value": "Pembiaran perilaku yang tidak sesuai"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Keteladanan dan akuntabilitas pimpinan"
+    }
+   ],
+   "options": {
+    "A": "Pimpinan hanya perlu bertindak setelah pengaduan resmi diterima.",
+    "B": "Pimpinan harus menjadi teladan, mengawasi kepatuhan, dan melaporkan indikasi pelanggaran.",
+    "C": "Pimpinan sebaiknya menyerahkan seluruh persoalan perilaku kerja kepada masing-masing pekerja."
+   },
+   "answer": "B",
+   "basis": "Tanggung Jawab Penerapan Kebijakan. Pimpinan bertanggung jawab mengimplementasikan kebijakan, menjadi panutan, melakukan pembinaan dan pengawasan, serta melaporkan indikasi pelanggaran.",
+   "competency": "Menjalankan peran sebagai teladan"
+  },
+  {
+   "title": "Equal Opportunity, Different Backgrounds",
+   "topic": "Inklusivitas dan Kesetaraan",
+   "person": "Fajar, Tim Rekrutmen",
+   "story": "Dalam proses rekrutmen, tim Fajar menerima kandidat dengan latar belakang dan kondisi fisik yang beragam. Salah satu anggota tim mengusulkan untuk tidak mempertimbangkan kandidat penyandang disabilitas tanpa terlebih dahulu menilai kompetensi dan persyaratan jabatan yang relevan.",
+   "desk": [
+    {
+     "label": "Process",
+     "value": "Rekrutmen dan seleksi"
+    },
+    {
+     "label": "Issue",
+     "value": "Kesempatan yang setara"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Diversity, Equity, and Inclusion (DEI)"
+    }
+   ],
+   "options": {
+    "A": "Kandidat harus dinilai secara objektif berdasarkan kualifikasi dan persyaratan jabatan yang relevan, tanpa diskriminasi.",
+    "B": "Kandidat penyandang disabilitas sebaiknya otomatis dikecualikan untuk menyederhanakan proses rekrutmen.",
+    "C": "Kesetaraan kesempatan hanya perlu diterapkan setelah seseorang menjadi pekerja."
+   },
+   "answer": "A",
+   "basis": "Kebijakan Inklusif di Tempat Kerja. Prinsip DEI menjadi acuan untuk menghargai keberagaman, memberikan kesempatan yang setara, serta memastikan perlakuan yang adil dalam proses rekrutmen dan pekerjaan.",
+   "competency": "Menerapkan prinsip DEI"
+  },
+  {
+   "title": "The Overloaded Team",
+   "topic": "Employee Well-being",
+   "person": "Maya, Pimpinan Unit Operasional",
+   "story": "Maya melihat anggota timnya terus menerima beban kerja berlebihan dan kesulitan menjaga keseimbangan antara pekerjaan dan kehidupan pribadi. Namun, ia menganggap kondisi tersebut sebagai hal yang wajar dan tidak melakukan evaluasi terhadap pembagian beban kerja.",
+   "desk": [
+    {
+     "label": "Issue",
+     "value": "Beban kerja dan kesejahteraan pekerja"
+    },
+    {
+     "label": "Context",
+     "value": "Pengelolaan tim"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Employee Well-being"
+    }
+   ],
+   "options": {
+    "A": "Pekerja harus mengatasi beban kerja berlebihan secara mandiri tanpa campur tangan pimpinan.",
+    "B": "Beban kerja hanya perlu ditangani ketika sudah memengaruhi kinerja perusahaan.",
+    "C": "Pimpinan harus memantau kondisi pekerja, mendorong beban kerja yang wajar, dan mendukung keseimbangan kehidupan kerja."
+   },
+   "answer": "C",
+   "basis": "Kebijakan Peningkatan Kualitas Kehidupan Pekerja. Pimpinan wajib memperhatikan kondisi fisik dan mental pekerja, memantau beban kerja, serta mendukung keseimbangan kehidupan kerja dan pribadi.",
+   "competency": "Mendukung kesejahteraan pekerja"
+  },
+  {
+   "title": "The Retaliation Concern",
+   "topic": "Perlindungan dari Tindakan Balasan",
+   "person": "Dewi, Pekerja Administrasi",
+   "story": "Setelah melaporkan dugaan pelecehan melalui saluran resmi, Dewi merasa khawatir akan diperlakukan berbeda oleh pihak yang dilaporkan. Ia takut kehilangan kesempatan pengembangan karier atau mendapatkan tekanan karena telah menyampaikan laporan.",
+   "desk": [
+    {
+     "label": "Issue",
+     "value": "Risiko tindakan balasan (retaliation)"
+    },
+    {
+     "label": "Context",
+     "value": "Setelah pelaporan"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Perlindungan pelapor dan korban"
+    }
+   ],
+   "options": {
+    "A": "Pekerja yang melaporkan pelanggaran harus menerima segala konsekuensi di tempat kerja.",
+    "B": "Perusahaan wajib melindungi pelapor, korban, dan saksi dari intimidasi serta tindakan balasan sesuai ketentuan yang berlaku.",
+    "C": "Laporan sebaiknya ditarik apabila berpotensi menimbulkan ketegangan dalam tim."
+   },
+   "answer": "B",
+   "basis": "Kebijakan mengatur perlindungan terhadap korban dan pelapor serta pencegahan tindakan balasan dalam proses penanganan laporan.",
+   "competency": "Mencegah tindakan balasan"
+  },
+  {
+   "title": "The Consequences of Violation",
+   "topic": "Pelanggaran dan Sanksi",
+   "person": "Arman, Pekerja Senior",
+   "story": "Hasil penanganan dugaan pelanggaran menunjukkan bahwa seorang pekerja terbukti melakukan tindakan yang bertentangan dengan ketentuan RIWP. Pekerja tersebut berpendapat bahwa pelanggaran tidak seharusnya dikenai sanksi karena tidak berdampak langsung pada target operasional unit.",
+   "desk": [
+    {
+     "label": "Issue",
+     "value": "Pelanggaran kebijakan perusahaan"
+    },
+    {
+     "label": "Context",
+     "value": "Hasil penanganan pelanggaran"
+    },
+    {
+     "label": "RIWP Focus",
+     "value": "Akuntabilitas dan sanksi"
+    }
+   ],
+   "options": {
+    "A": "Pelanggaran dapat diabaikan apabila target operasional tercapai.",
+    "B": "Sanksi hanya berlaku bagi pekerja yang menduduki jabatan manajerial.",
+    "C": "Pelanggaran RIWP dikenai sanksi sesuai perjanjian kerja bersama, produk hukum perusahaan, dan/atau peraturan perundang-undangan melalui mekanisme yang berlaku."
+   },
+   "answer": "C",
+   "basis": "Pelanggaran terhadap ketentuan RIWP diberikan sanksi sesuai ketentuan dan mekanisme yang berlaku di perusahaan.",
+   "competency": "Memahami konsekuensi pelanggaran"
+  }
+ ]
+}
