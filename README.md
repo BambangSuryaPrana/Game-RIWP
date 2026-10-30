@@ -92,6 +92,42 @@ Semua tabel memakai awalan `riwp_`, jadi aman berbagi database dengan aplikasi R
 
 **Jangan pakai SQLite di Render:** file SQLite terhapus setiap server restart. Selalu isi `DATABASE_URL`.
 
+**Pastikan tipenya Web Service, bukan Static Site.** Static Site hanya menyajikan tampilan tanpa server, sehingga game menampilkan pesan *"Server aplikasi tidak ditemukan"*. Kalau membuat manual (tanpa Blueprint), pilih **New → Web Service** dengan:
+- Build Command: `npm install --include=dev && npm run build`
+- Start Command: `npm start`
+- Environment: `DATABASE_URL` (Neon), `SETUP_KODE` (kode bebas, misalnya `RIWP2026`), `NODE_VERSION` = `22`
+
+---
+
+## 4b. Online-kan di Vercel (alternatif)
+
+Proyek ini juga bisa di-deploy ke Vercel. File `vercel.json` dan `api/index.js` sudah disiapkan, sehingga server berjalan sebagai *serverless function* di alamat yang sama dengan tampilan.
+
+1. Upload proyek ke GitHub.
+2. Di **vercel.com**: **Add New → Project**, lalu import repository ini. Framework terdeteksi sebagai **Vite**. Pengaturan build tidak perlu diubah karena sudah diatur oleh `vercel.json`.
+3. Buka **Environment Variables**, lalu tambahkan:
+   - `DATABASE_URL`: connection string Neon. **Pakai yang *pooled*** (alamat host mengandung `-pooler`), karena fungsi Vercel membuka banyak koneksi.
+   - `SETUP_KODE`: kode bebas untuk membuat akun admin pertama, misalnya `RIWP2026`. **Wajib** di Vercel, karena kode acak tidak bisa dilihat di terminal.
+4. Klik **Deploy**.
+5. Cek `https://…vercel.app/api/health`. Hasilnya harus `{"ok":true,"database":"postgres"}`.
+6. Buka `https://…vercel.app/#/admin`, lalu buat akun admin memakai `SETUP_KODE`.
+
+Kalau Environment Variables diubah setelah deploy, buka tab **Deployments** lalu klik **Redeploy** supaya perubahannya terbaca.
+
+**Netlify, GitHub Pages, dan hosting statis lainnya tidak didukung**, karena hanya menyajikan tampilan tanpa server.
+
+---
+
+## 4c. Mengatasi error setelah deploy
+
+| Pesan / gejala | Penyebab | Solusi |
+|---|---|---|
+| *"Server aplikasi tidak ditemukan…"* atau *"Terjadi kesalahan (404)"*, teks pembuka kosong | Yang ter-deploy hanya tampilan (Static Site / hosting statis) | Deploy ulang sebagai **Web Service** (Render) atau proyek **Vercel** seperti di atas |
+| *"DATABASE_URL belum diisi…"* | Environment variable belum ada | Isi `DATABASE_URL`, lalu redeploy |
+| *"SETUP_KODE belum diatur…"* saat membuat admin | Di Vercel, kode setup wajib diisi sendiri | Tambahkan `SETUP_KODE`, lalu redeploy |
+| *"Terjadi kesalahan di server"* | Biasanya koneksi database (password salah, project Neon/Supabase dijeda) | Cek log di Render (tab **Logs**) atau Vercel (tab **Logs**), lalu cek connection string |
+| `/api/health` tidak menampilkan `{"ok":true…}` | Server tidak berjalan | Lihat log build/deploy di hosting |
+
 ---
 
 ## 5. Backup & pemulihan
@@ -130,6 +166,9 @@ src/
   game/               tampilan game pegawai
   admin/              tampilan dashboard admin
   sound.js            musik & efek suara (Web Audio, tanpa file lagu)
+api/index.js          pintu masuk server untuk Vercel (serverless)
+vercel.json           pengaturan deploy Vercel
+render.yaml           pengaturan deploy Render
 scripts/              backup & restore
 test/                 uji otomatis
 ```

@@ -28,6 +28,7 @@ export function adminRoutes(db, { setupCode }) {
   r.post("/setup", loginLimit, async (req, res, next) => {
     try {
       if ((await adminCount()) > 0) return res.status(409).json({ error: "Akun admin sudah ada. Silakan masuk." });
+      if (!setupCode) return res.status(503).json({ error: "SETUP_KODE belum diatur. Tambahkan SETUP_KODE di Environment Variables hosting, lalu deploy ulang." });
       const code = String(req.body?.code || "");
       const a = Buffer.from(sha256(code)), b = Buffer.from(sha256(setupCode));
       if (!crypto.timingSafeEqual(a, b)) return res.status(403).json({ error: "Kode setup salah. Lihat SETUP_KODE di server." });
