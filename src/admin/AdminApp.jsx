@@ -22,7 +22,7 @@ export default function AdminApp({ tab }) {
   const load = useCallback(async () => {
     try {
       const st = await api("/admin/status");
-      if (st.needsSetup) return setState({ needsSetup: true, database: st.database });
+      if (st.needsSetup) return setState({ needsSetup: true, codeRequired: !!st.setupCodeRequired });
       try {
         const me = await api("/admin/me");
         setState({ me });
@@ -41,7 +41,7 @@ export default function AdminApp({ tab }) {
   let content;
   if (state.loading) content = <div className="auth"><div className="auth-card">Memuat…</div></div>;
   else if (state.error) content = <div className="auth"><div className="auth-card"><h1>Server tidak terjangkau</h1><p className="err-box">{state.error}</p><button className="btn-p" onClick={load}>Coba lagi</button></div></div>;
-  else if (state.needsSetup) content = <Setup onDone={load} database={state.database} />;
+  else if (state.needsSetup) content = <Setup onDone={load} codeRequired={state.codeRequired} />;
   else if (state.login) content = <Login onDone={load} />;
   else {
     const active = TABS.find((t) => t.id === tab) || TABS[0];
@@ -107,7 +107,7 @@ function Login({ onDone }) {
   );
 }
 
-function Setup({ onDone, database }) {
+function Setup({ onDone, codeRequired }) {
   const [f, setF] = useState({ code: "", username: "", nama: "", password: "" });
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
@@ -122,9 +122,9 @@ function Setup({ onDone, database }) {
       <form className="auth-card" onSubmit={submit}>
         <div className="adm-logo" style={{ color: "var(--navy)" }}><i style={{ color: "#fff" }}>R</i> RIWP Case Files</div>
         <h1>Buat akun admin pertama</h1>
-        <p className="small muted" style={{ margin: 0 }}>Kode setup tampil di terminal server saat aplikasi dijalankan (atau di variabel SETUP_KODE). Database: {database}</p>
+        <p className="small muted" style={{ margin: 0 }}>Akun ini dipakai untuk masuk ke dashboard. Admin lain bisa ditambahkan nanti di menu Akun.</p>
         {err && <p className="err-box" role="alert">{err}</p>}
-        <Field label="Kode setup" id="sc"><input className="inp" id="sc" autoComplete="off" value={f.code} onChange={set("code")} /></Field>
+        {codeRequired && <Field label="Kode setup" id="sc"><input className="inp" id="sc" autoComplete="off" value={f.code} onChange={set("code")} /></Field>}
         <Field label="Username" id="su"><input className="inp" id="su" autoComplete="username" placeholder="contoh: admin.sdm" value={f.username} onChange={set("username")} /></Field>
         <Field label="Nama lengkap" id="sn"><input className="inp" id="sn" value={f.nama} onChange={set("nama")} /></Field>
         <Field label="Password (min. 8 karakter, huruf & angka)" id="sp"><input className="inp" id="sp" type="password" autoComplete="new-password" value={f.password} onChange={set("password")} /></Field>

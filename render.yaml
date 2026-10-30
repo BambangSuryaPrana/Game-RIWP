@@ -14,7 +14,5 @@ services:
         sync: false
       - key: DATABASE_SSL
         value: verify
-      - key: SETUP_KODE
-        generateValue: true
       - key: SESSION_DAYS
         value: "7"

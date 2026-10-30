@@ -22,16 +22,19 @@ export function adminRoutes(db, { setupCode }) {
 
   // ---------- akses ----------
   r.get("/status", async (req, res, next) => {
-    try { res.json({ needsSetup: (await adminCount()) === 0, database: db.label }); } catch (e) { next(e); }
+    try { res.json({ needsSetup: (await adminCount()) === 0, setupCodeRequired: !!setupCode, database: db.label }); } catch (e) { next(e); }
   });
 
+  // Membuat admin pertama. Hanya bisa dilakukan sekali (selama belum ada admin).
+  // Kode setup bersifat opsional: hanya diminta kalau SETUP_KODE diisi di environment.
   r.post("/setup", loginLimit, async (req, res, next) => {
     try {
       if ((await adminCount()) > 0) return res.status(409).json({ error: "Akun admin sudah ada. Silakan masuk." });
-      if (!setupCode) return res.status(503).json({ error: "SETUP_KODE belum diatur. Tambahkan SETUP_KODE di Environment Variables hosting, lalu deploy ulang." });
-      const code = String(req.body?.code || "");
-      const a = Buffer.from(sha256(code)), b = Buffer.from(sha256(setupCode));
-      if (!crypto.timingSafeEqual(a, b)) return res.status(403).json({ error: "Kode setup salah. Lihat SETUP_KODE di server." });
+      if (setupCode) {
+        const code = String(req.body?.code || "");
+        const a = Buffer.from(sha256(code)), b = Buffer.from(sha256(setupCode));
+        if (!crypto.timingSafeEqual(a, b)) return res.status(403).json({ error: "Kode setup salah. Lihat SETUP_KODE di pengaturan server." });
+      }
       const username = clip(req.body?.username, 40).toLowerCase();
       const nama = clip(req.body?.nama, 100);
       if (!/^[a-z0-9._-]{3,40}$/.test(username)) return res.status(400).json({ error: "Username 3–40 karakter: huruf kecil, angka, titik, minus, atau garis bawah." });

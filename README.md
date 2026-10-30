@@ -50,7 +50,7 @@ npm run dev
 
 Port 3001 pada mode dev hanya server API (data), bukan tampilan.
 
-Saat pertama dijalankan, terminal menampilkan **Kode setup**. Buka halaman admin, masukkan kode itu, lalu buat akun admin pertama.
+Saat pertama kali membuka halaman admin, isi username, nama, dan password untuk membuat akun admin pertama. Halaman ini hanya muncul selama belum ada admin.
 
 Tanpa `DATABASE_URL`, data tersimpan di `data/riwp.db` (SQLite). 10 soal dari dokumen RIWP otomatis terisi.
 
@@ -82,9 +82,9 @@ Semua tabel memakai awalan `riwp_`, jadi aman berbagi database dengan aplikasi R
 
 1. Upload folder proyek ke GitHub (misalnya lewat GitHub Desktop). File `.env` tidak ikut ter-upload.
 2. Di **render.com**: **New → Blueprint**, lalu pilih repository ini. Render membaca `render.yaml` (paket Free, region Singapore).
-3. Isi **DATABASE_URL** dengan alamat Neon. `SETUP_KODE` dibuat otomatis.
+3. Isi **DATABASE_URL** dengan alamat Neon.
 4. Klik **Deploy Blueprint**, lalu tunggu sampai status **Live** (sekitar 3–5 menit).
-5. Ambil kode setup di menu **Environment → SETUP_KODE**, lalu buka `https://…onrender.com/#/admin` untuk membuat akun admin.
+5. **Segera** buka `https://…onrender.com/#/admin` dan buat akun admin pertama (lihat catatan keamanan di bawah).
 6. Cek `https://…onrender.com/api/health`. Hasilnya harus `{"ok":true,"database":"postgres"}`.
 7. Bagikan `https://…onrender.com` ke pegawai. Link yang sama juga ada di Dashboard dengan tombol **Salin link**.
 
@@ -95,7 +95,7 @@ Semua tabel memakai awalan `riwp_`, jadi aman berbagi database dengan aplikasi R
 **Pastikan tipenya Web Service, bukan Static Site.** Static Site hanya menyajikan tampilan tanpa server, sehingga game menampilkan pesan *"Server aplikasi tidak ditemukan"*. Kalau membuat manual (tanpa Blueprint), pilih **New → Web Service** dengan:
 - Build Command: `npm install --include=dev && npm run build`
 - Start Command: `npm start`
-- Environment: `DATABASE_URL` (Neon), `SETUP_KODE` (kode bebas, misalnya `RIWP2026`), `NODE_VERSION` = `22`
+- Environment: `DATABASE_URL` (Neon), `NODE_VERSION` = `22`
 
 ---
 
@@ -107,10 +107,9 @@ Proyek ini juga bisa di-deploy ke Vercel. File `vercel.json` dan `api/index.js` 
 2. Di **vercel.com**: **Add New → Project**, lalu import repository ini. Framework terdeteksi sebagai **Vite**. Pengaturan build tidak perlu diubah karena sudah diatur oleh `vercel.json`.
 3. Buka **Environment Variables**, lalu tambahkan:
    - `DATABASE_URL`: connection string Neon. **Pakai yang *pooled*** (alamat host mengandung `-pooler`), karena fungsi Vercel membuka banyak koneksi.
-   - `SETUP_KODE`: kode bebas untuk membuat akun admin pertama, misalnya `RIWP2026`. **Wajib** di Vercel, karena kode acak tidak bisa dilihat di terminal.
 4. Klik **Deploy**.
 5. Cek `https://…vercel.app/api/health`. Hasilnya harus `{"ok":true,"database":"postgres"}`.
-6. Buka `https://…vercel.app/#/admin`, lalu buat akun admin memakai `SETUP_KODE`.
+6. **Segera** buka `https://…vercel.app/#/admin` dan buat akun admin pertama (lihat catatan keamanan di bawah).
 
 Kalau Environment Variables diubah setelah deploy, buka tab **Deployments** lalu klik **Redeploy** supaya perubahannya terbaca.
 
@@ -118,13 +117,21 @@ Kalau Environment Variables diubah setelah deploy, buka tab **Deployments** lalu
 
 ---
 
-## 4c. Mengatasi error setelah deploy
+## 4c. Catatan keamanan: akun admin pertama
+
+Akun admin pertama dibuat tanpa kode. Artinya, **siapa pun yang pertama kali membuka `/#/admin`** pada aplikasi yang baru di-deploy bisa menjadi admin. Karena itu:
+- Buat akun admin **segera setelah deploy selesai**, sebelum link dibagikan ke pegawai.
+- Setelah ada satu admin, halaman pembuatan admin tertutup. Admin berikutnya hanya bisa ditambahkan dari menu **Akun** oleh admin yang sudah login.
+- Kalau ingin perlindungan tambahan, isi environment variable `SETUP_KODE` (misalnya `RIWP2026`). Kolom kode setup akan muncul lagi di form, dan admin pertama hanya bisa dibuat dengan kode itu.
+
+---
+
+## 4d. Mengatasi error setelah deploy
 
 | Pesan / gejala | Penyebab | Solusi |
 |---|---|---|
 | *"Server aplikasi tidak ditemukan…"* atau *"Terjadi kesalahan (404)"*, teks pembuka kosong | Yang ter-deploy hanya tampilan (Static Site / hosting statis) | Deploy ulang sebagai **Web Service** (Render) atau proyek **Vercel** seperti di atas |
 | *"DATABASE_URL belum diisi…"* | Environment variable belum ada | Isi `DATABASE_URL`, lalu redeploy |
-| *"SETUP_KODE belum diatur…"* saat membuat admin | Di Vercel, kode setup wajib diisi sendiri | Tambahkan `SETUP_KODE`, lalu redeploy |
 | *"Terjadi kesalahan di server"* | Biasanya koneksi database (password salah, project Neon/Supabase dijeda) | Cek log di Render (tab **Logs**) atau Vercel (tab **Logs**), lalu cek connection string |
 | `/api/health` tidak menampilkan `{"ok":true…}` | Server tidak berjalan | Lihat log build/deploy di hosting |
 

@@ -1,5 +1,4 @@
 import "dotenv/config";
-import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,7 +11,7 @@ const distDir = path.resolve("dist");
 const hasBuild = fs.existsSync(path.join(distDir, "index.html"));
 
 const db = await openDatabase();
-const setupCode = process.env.SETUP_KODE || crypto.randomBytes(4).toString("hex").toUpperCase();
+const setupCode = process.env.SETUP_KODE || null; // opsional
 const app = createApp(db, { setupCode, distDir: DEV ? null : distDir, devHint: DEV || !hasBuild });
 
 app.listen(PORT, () => {
@@ -33,7 +32,6 @@ app.listen(PORT, () => {
     console.log(`  Tampilan belum di-build. Jalankan "npm run build" dulu, lalu "npm start" lagi.`);
     console.log(`  Atau pakai mode dev: "npm run dev" lalu buka http://localhost:5173`);
   }
-  if (!process.env.SETUP_KODE) console.log(`  Kode setup    : ${setupCode}  (dipakai sekali untuk membuat akun admin pertama)`);
   if (db.kind === "sqlite" && process.env.RENDER) {
     console.warn("  PERINGATAN: di Render, file SQLite hilang setiap restart. Isi DATABASE_URL (Neon) supaya data permanen.");
   }
