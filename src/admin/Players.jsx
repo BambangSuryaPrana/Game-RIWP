@@ -252,34 +252,4 @@ function CleanupPanel({ call, filters, onDone }) {
     } catch (x) { toast(x.message, "err"); }
     finally { setBusy(false); }
   };
-
-  return (
-    <section className="panel danger-zone">
-      <div className="panel-head">
-        <div>
-          <h2>Bersihkan data peserta</h2>
-          <p>{filtered ? "Hanya data yang cocok dengan filter di atas yang akan dihapus." : "Tidak ada filter aktif: berlaku untuk SEMUA data peserta."} Unduh Excel dulu sebagai cadangan.</p>
-        </div>
-      </div>
-      <form onSubmit={run} style={{ display: "grid", gap: 14 }}>
-        <div className="seg-ctl" role="radiogroup" aria-label="Data yang dihapus" style={{ justifySelf: "start", flexWrap: "wrap" }}>
-          <button type="button" role="radio" aria-checked={scope === "unfinished"} aria-pressed={scope === "unfinished"} onClick={() => setScope("unfinished")}>
-            Hanya yang belum selesai ({counts?.unfinished ?? "…"})
-          </button>
-          <button type="button" role="radio" aria-checked={scope === "all"} aria-pressed={scope === "all"} onClick={() => setScope("all")}>
-            Semua permainan ({counts?.all ?? "…"} dari {counts?.players ?? "…"} pegawai)
-          </button>
-        </div>
-        <div className="row-actions" style={{ alignItems: "flex-end" }}>
-          <div className="fld" style={{ flex: "0 1 260px" }}>
-            <label htmlFor="clr-confirm">Ketik <b>HAPUS</b> untuk konfirmasi</label>
-            <input className="inp" id="clr-confirm" autoComplete="off" value={text} onChange={(e) => setText(e.target.value)} placeholder="HAPUS" />
-          </div>
-          <button type="submit" className="btn-danger" disabled={busy || !n || text.trim().toUpperCase() !== "HAPUS"}>
-            {busy ? "Menghapus…" : `Hapus ${n || 0} permainan`}
-          </button>
-        </div>
-      </form>
-    </section>
-  );
 }
