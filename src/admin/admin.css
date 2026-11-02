@@ -235,3 +235,16 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
 .pw-eye:hover { color: var(--blue); background: var(--surface-2); }
 .pw-eye[aria-pressed="true"] { color: var(--blue); }
 .pw-wrap .inp::-ms-reveal, .pw-wrap .inp::-ms-clear { display: none; }
+
+/* hapus peserta */
+.chk { width: 18px; height: 18px; accent-color: var(--blue); cursor: pointer; }
+.tbl tr.picked td { background: var(--bar-soft); }
+.bulk-bar { display: flex; gap: 10px 14px; align-items: center; flex-wrap: wrap; border: 2px solid var(--bad); background: var(--bad-soft); padding: 14px 18px; }
+.danger-zone { border: 1px solid #f3c6cd; }
+.danger-zone .panel-head h2 { color: var(--bad); }
+.btn-danger { border-radius: 12px; padding: 10px 16px; font-weight: 700; font-size: 14px; border: 0; background: var(--bad); color: #fff; }
+.btn-danger[disabled] { opacity: .45; cursor: not-allowed; }
+.bulk-info { display: flex; gap: 6px 12px; align-items: center; flex-wrap: wrap; flex: 1 1 320px; }
+.bulk-act { display: flex; justify-content: flex-end; flex: 1 1 auto; }
+.bulk-act .confirm { background: var(--surface); width: 100%; }
+.bulk-act:has(.confirm) { flex-basis: 100%; }

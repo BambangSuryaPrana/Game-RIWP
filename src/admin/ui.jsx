@@ -37,7 +37,7 @@ export function ConfirmButton({ label, question, confirmLabel = "Ya, hapus", onC
     <div className="confirm">
       <p>{question}</p>
       <button type="button" className="btn-s" onClick={() => setOpen(false)} disabled={busy}>Batal</button>
-      <button type="button" className="btn-d" disabled={busy} onClick={async () => {
+      <button type="button" className="btn-danger" disabled={busy} onClick={async () => {
         setBusy(true);
         try { await onConfirm(); setOpen(false); } finally { setBusy(false); }
       }}>{busy ? "Memproses…" : confirmLabel}</button>

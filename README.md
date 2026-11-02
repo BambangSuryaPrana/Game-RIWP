@@ -27,7 +27,7 @@ Arsitekturnya sama dengan aplikasi RPA sebelumnya: React + Vite untuk tampilan, 
 | Menu | Isi |
 |---|---|
 | **Dashboard** | Link game + tombol salin, jumlah pegawai yang sudah akses (NIPP unik), total permainan, rata-rata nilai, jumlah & persentase lulus, ketepatan jawaban per kasus (kasus < 60% ditandai *perlu penguatan*), sebaran nilai, aktivitas harian, rekap per unit, aktivitas terbaru. Diperbarui otomatis tiap 15 detik. Bisa difilter per unit dan tanggal. |
-| **Peserta** | Tabel per pegawai (NIPP, nama, unit, jumlah main, nilai terbaik & terakhir, status, terakhir akses) atau semua permainan. Klik baris untuk melihat riwayat dan detail jawaban per soal. Bisa menghapus permainan uji coba. |
+| **Peserta** | Tabel per pegawai (NIPP, nama, unit, jumlah main, nilai terbaik & terakhir, status, terakhir akses) atau semua permainan. Klik baris untuk melihat riwayat dan detail jawaban. **Super Admin** bisa menghapus satu permainan, menghapus satu peserta beserta semua permainannya, mencentang beberapa peserta lalu menghapus sekaligus, atau **Bersihkan data** (semua / hanya yang belum selesai, mengikuti filter aktif, dengan konfirmasi ketik HAPUS). |
 | **Bank Soal** | Edit kasus, tambah kasus baru, tandai jawaban benar, nonaktifkan, urutkan naik/turun, hapus. |
 | **Pengaturan** | Judul, teks pembuka, dasar peraturan, kalimat pertanyaan, pesan salah, daftar pujian, batas lulus (bawaan 80), daftar unit kerja. |
 | **Akun** | Ganti password sendiri. Super Admin juga bisa menambah/menghapus admin, mengubah peran, dan mereset password admin lain. |
@@ -43,7 +43,7 @@ Ada dua peran. **Akun pertama yang dibuat otomatis menjadi Super Admin.**
 | Mengedit, menambah, mengurutkan, menonaktifkan soal | ✓ | ✓ |
 | Mengganti password sendiri | ✓ | ✓ |
 | Menghapus soal | – | ✓ |
-| Menghapus data permainan pegawai | – | ✓ |
+| Menghapus peserta & membersihkan data permainan | – | ✓ |
 | Menu **Pengaturan** (teks, batas lulus, unit kerja) | – | ✓ |
 | Menambah & menghapus admin, mengubah peran, reset password admin lain | – | ✓ |
 

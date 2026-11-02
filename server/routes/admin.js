@@ -127,6 +127,52 @@ export function adminRoutes(db, { setupCode }) {
     } catch (e) { next(e); }
   });
 
+  // Hapus banyak permainan sekaligus (beserta jawabannya). Mengembalikan jumlah yang terhapus.
+  async function deletePlays(ids) {
+    let removed = 0;
+    await db.tx(async (t) => {
+      for (let i = 0; i < ids.length; i += 500) {
+        const chunk = ids.slice(i, i + 500);
+        const marks = chunk.map(() => "?").join(",");
+        await t.run(`DELETE FROM riwp_answers WHERE play_id IN (${marks})`, chunk);
+        removed += (await t.run(`DELETE FROM riwp_plays WHERE id IN (${marks})`, chunk)).changes;
+      }
+    });
+    return removed;
+  }
+
+  // Hapus peserta (berdasarkan NIPP): semua permainan & jawabannya ikut terhapus.
+  r.post("/players/delete", superOnly, async (req, res, next) => {
+    try {
+      const nipps = [...new Set((Array.isArray(req.body?.nipps) ? req.body.nipps : [])
+        .map((x) => clip(x, 20).toUpperCase()).filter(Boolean))].slice(0, 5000);
+      if (!nipps.length) return res.status(400).json({ error: "Pilih minimal satu peserta." });
+      const ids = [];
+      for (let i = 0; i < nipps.length; i += 500) {
+        const chunk = nipps.slice(i, i + 500);
+        const rows = await db.all(`SELECT id FROM riwp_plays WHERE UPPER(nipp) IN (${chunk.map(() => "?").join(",")})`, chunk);
+        ids.push(...rows.map((r0) => r0.id));
+      }
+      const plays = await deletePlays(ids);
+      res.json({ players: nipps.length, plays });
+    } catch (e) { next(e); }
+  });
+
+  // Bersihkan data permainan sesuai filter (unit, tanggal, pencarian). Wajib konfirmasi teks "HAPUS".
+  // scope: "all" = semua permainan yang cocok, "unfinished" = hanya yang belum selesai.
+  r.post("/plays/clear", superOnly, async (req, res, next) => {
+    try {
+      if (String(req.body?.confirm || "").trim().toUpperCase() !== "HAPUS") {
+        return res.status(400).json({ error: 'Ketik HAPUS untuk konfirmasi.' });
+      }
+      const scope = req.body?.scope === "unfinished" ? "unfinished" : "all";
+      let plays = await loadPlays(db, filters(req.body || {}));
+      if (scope === "unfinished") plays = plays.filter((p) => !p.finishedAt);
+      const removed = await deletePlays(plays.map((p) => p.id));
+      res.json({ plays: removed, scope });
+    } catch (e) { next(e); }
+  });
+
   r.get("/export.xlsx", auth, async (req, res, next) => {
     try {
       const buf = await buildWorkbook(db, filters(req.query), await passScore());
